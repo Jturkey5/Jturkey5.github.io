@@ -1,8 +1,101 @@
 <!DOCTYPE html>
-<html>
-    <body>
-        <h1>
-            hi
-        </h1>
-    </body>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <!-- Menu bar -->
+    <div class="menu" id="menu">
+        <a class="menu-logo" href="#">Your Website Name</a>
+        <div class="menu-items">
+            <a class="menu-item" href="#">Home</a>
+            <a class="menu-item" href="restaurant.html">Restaurant</a>
+            <a class="menu-item" href="#">Coming Soon</a>
+            <a class="menu-item" href="#">Coming Soon</a>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <h1>Restaurant</h1>
+        <div class="description-section">
+            <p>You will receive an email with details that your website will be live with a custom domain.</p>
+        </div>
+
+        <!-- Amazon Pay button placeholder -->
+        <div id="amazon-pay-button"></div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-info">
+            <p>Contact us: email@example.com | Phone: (123) 456-7890</p>
+        </div>
+        <div class="footer-social">
+            <a href="#" class="social-icon">Facebook</a>
+            <a href="#" class="social-icon">Twitter</a>
+            <a href="#" class="social-icon">LinkedIn</a>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Amazon Pay Integration -->
+    <script type="text/javascript" src="https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js"></script>
+
+    <script>
+        window.onAmazonLoginReady = function () {
+            amazon.Login.setClientId("amzn1.application-oa2-client.70585090f28e4f8381f38eeefaa9f7af");
+
+            // Move the onAmazonPaymentsReady function inside onAmazonLoginReady
+            window.onAmazonPaymentsReady = function () {
+                new OffAmazonPayments.Button("amazon-pay-button", "A1C8246Z3S2KSA", {
+                    type: "PwA",
+                    color: "Gold",
+                    size: "medium",
+                    authorization: function () {
+                        // Replace this function with the code to authorize the payment
+                        var amount = "10.00"; // Replace with the actual payment amount
+                        var referenceId = "ORDER_REFERENCE_ID"; // Replace with a unique order reference ID for your order
+                        var options = {
+                            amount: {
+                                currencyCode: "USD",
+                                amount: amount,
+                            },
+                            sellerNote: "Payment for your order",
+                            sellerOrderId: referenceId,
+                            storeName: "Your Store Name",
+                        };
+
+                        // Call the Amazon Pay API to authorize the payment
+                        amazon.Pay.authorize(options, function (authorization) {
+                            // The payment is authorized, you can now process the order
+                            console.log("Authorization successful:", authorization);
+                            // Implement additional logic here, e.g., send order details to your server for processing
+
+                            // For testing purposes, you can redirect to a success page
+                            window.location.href = "success.html";
+                        }, function (error) {
+                            // Handle errors during payment authorization
+                            console.error("Authorization error:", error);
+                        });
+                    },
+                    onError: function (error) {
+                        // Handle errors when the Amazon Pay button cannot be rendered
+                        console.error("Amazon Pay button error:", error);
+                    }
+                });
+            };
+        };
+    </script>
+</body>
+
 </html>
